@@ -24,6 +24,7 @@ export function WindowManager() {
   const minimizeWindow = useDesktopStore((s) => s.minimizeWindow)
   const toggleMaximize = useDesktopStore((s) => s.toggleMaximize)
   const setWindowPos = useDesktopStore((s) => s.setWindowPos)
+  const setWindowSize = useDesktopStore((s) => s.setWindowSize)
   const toggleMusicExpanded = useDesktopStore((s) => s.toggleMusicExpanded)
 
   const visible = openWindows.filter((id) => !windowMinimized[id])
@@ -43,19 +44,23 @@ export function WindowManager() {
 
         const style: CSSProperties = {
           position: 'absolute',
-          width: bounds.width,
           zIndex: z,
           opacity: isFocused ? 1 : 0.72,
           boxShadow: isFocused ? 'var(--shadow-window-focused)' : 'var(--shadow-window-unfocused)',
-          transition: 'opacity .2s ease, box-shadow .2s ease, width .2s cubic-bezier(.2,.8,.3,1)',
+          transition: 'opacity .2s ease, box-shadow .2s ease',
         }
 
         const frame: WindowFrameProps = {
           top: bounds.top,
           left: bounds.left,
+          width: bounds.width,
+          height: bounds.height,
           style,
           onMouseDown: () => focusWindow(id),
+          // Maximized and the Music library preset own their own geometry, so
+          // drag/resize stay off until the window is back to free-form bounds.
           onMove: maximized ? undefined : (top, left) => setWindowPos(id, top, left),
+          onResize: maximized || isMusicExpanded ? undefined : (w, h) => setWindowSize(id, w, h),
           onClose: () => closeWindow(id),
           onMinimize: () => minimizeWindow(id),
           onMaximize: () => toggleMaximize(id),

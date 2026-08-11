@@ -25,7 +25,7 @@ export function clampWindowPos(pos: WindowPos, viewport: Viewport): WindowPos {
   top = Math.max(top, MENUBAR_HEIGHT + 8)
   top = Math.min(top, viewport.height - DOCK_RESERVE)
 
-  return { top, left, width }
+  return { top, left, width, height: pos.height }
 }
 
 export function defaultPosFor(id: WindowId, viewport: Viewport): WindowPos {
@@ -37,9 +37,11 @@ export function musicExpandedPosFor(viewport: Viewport): WindowPos {
 }
 
 export function maximizedPosFor(viewport: Viewport): WindowPos {
+  const top = MENUBAR_HEIGHT + 16
   return {
-    top: MENUBAR_HEIGHT + 16,
+    top,
     left: 24,
     width: Math.max(360, viewport.width - 48),
+    height: Math.max(240, viewport.height - top - DOCK_RESERVE),
   }
 }

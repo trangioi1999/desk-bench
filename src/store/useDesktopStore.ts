@@ -29,6 +29,7 @@ interface DesktopState {
   minimizeWindow: (id: WindowId) => void
   toggleMaximize: (id: WindowId) => void
   setWindowPos: (id: WindowId, top: number, left: number) => void
+  setWindowSize: (id: WindowId, width: number, height: number) => void
 
   // ---- overlays: control center / spotlight / notification center ----
   cc: boolean
@@ -179,7 +180,19 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       }
     }),
   toggleMaximize: (id) => set((s) => ({ windowMaximized: { ...s.windowMaximized, [id]: !s.windowMaximized[id] } })),
-  setWindowPos: (id, top, left) => set((s) => ({ windowBounds: { ...s.windowBounds, [id]: { ...s.windowBounds[id]!, top, left } } })),
+  // The default-open windows start with no stored bounds, so both of these must
+  // fall back to the computed default — spreading a missing entry would drop
+  // width/height and collapse the window to its content size.
+  setWindowPos: (id, top, left) =>
+    set((s) => {
+      const current = s.windowBounds[id] ?? defaultPosFor(id, s.viewport)
+      return { windowBounds: { ...s.windowBounds, [id]: { ...current, top, left } } }
+    }),
+  setWindowSize: (id, width, height) =>
+    set((s) => {
+      const current = s.windowBounds[id] ?? defaultPosFor(id, s.viewport)
+      return { windowBounds: { ...s.windowBounds, [id]: { ...current, width, height } } }
+    }),
 
   cc: true,
   spot: false,

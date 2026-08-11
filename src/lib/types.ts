@@ -6,6 +6,9 @@ export interface WindowPos {
   top: number
   left: number
   width: number
+  /** Undefined means "auto" — the window is as tall as its content. Set once
+   * the user resizes it vertically, or while maximized. */
+  height?: number
 }
 
 /** Props every window content component receives from WindowManager, spread
@@ -14,9 +17,12 @@ export interface WindowPos {
 export interface WindowFrameProps {
   top: number
   left: number
+  width: number
+  height?: number
   style: CSSProperties
   onMouseDown: () => void
   onMove?: (top: number, left: number) => void
+  onResize?: (width: number, height: number) => void
   onClose: () => void
   onMinimize: () => void
   onMaximize: () => void

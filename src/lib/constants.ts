@@ -7,3 +7,5 @@ export const STAGE_HEIGHT = 900
 export const MENUBAR_HEIGHT = 30
 export const DOCK_RESERVE = 100 // space to keep clear above the dock
 export const WINDOW_MIN_VISIBLE = 120 // px of a window that must stay reachable on screen
+export const WINDOW_MIN_WIDTH = 320
+export const WINDOW_MIN_HEIGHT = 180
