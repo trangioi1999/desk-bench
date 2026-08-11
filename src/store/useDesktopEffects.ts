@@ -13,6 +13,7 @@ export function useDesktopEffects() {
 
     const tick = window.setInterval(() => {
       useDesktopStore.getState().tickPomodoro()
+      useDesktopStore.getState().tickYt()
     }, 1000)
     const clockTick = window.setInterval(() => {
       useDesktopStore.getState().tickClock()

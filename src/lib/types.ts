@@ -44,8 +44,16 @@ export interface Playlist {
 export interface Video {
   title: string
   channel: string
+  /** view count line */
   meta: string
+  /** subscriber count line for the channel row */
+  subs: string
+  /** duration, "M:SS" or "H:MM:SS" */
   len: string
+  /** two colours used for the placeholder thumbnail/player art */
+  art: [string, string]
+  /** sample caption line shown when captions are on */
+  caption: string
 }
 
 export interface Notification {

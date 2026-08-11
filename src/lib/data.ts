@@ -58,13 +58,80 @@ export const PLAYLISTS: Playlist[] = [
   { name: 'Ngủ ngon', count: 2, swatch: 'linear-gradient(150deg,#7a86b8,#4d5578)' },
 ]
 
+/** Index 0 is what the player opens on; the rest fill the "Tiếp theo" rail.
+ * Picking a rail item swaps it into the player, so the list is one pool. */
 export const VIDEOS: Video[] = [
-  { title: 'Jazz cà phê buổi sáng — nhạc nền thư giãn 3 giờ', channel: 'Coffee Shop Vibes', meta: '1,2 Tr lượt xem', len: '3:02:11' },
-  { title: 'Deep focus mix cho lập trình viên', channel: 'Focus Lab', meta: '842 N lượt xem', len: '1:48:22' },
-  { title: 'Piano nhẹ nhàng khi trời mưa', channel: 'Rainy Piano', meta: '2,8 Tr lượt xem', len: '2:15:40' },
-  { title: 'Synthwave đêm khuya — lái xe qua thành phố', channel: 'Neon Drive', meta: '410 N lượt xem', len: '58:07' },
-  { title: 'Tiếng sóng biển 8 giờ để ngủ sâu', channel: 'Nature Sound', meta: '5,1 Tr lượt xem', len: '8:00:00' },
+  {
+    title: 'lofi hip hop radio — nhạc để tập trung & học bài',
+    channel: 'Chill Study Radio',
+    meta: '12 Tr lượt xem',
+    subs: '2,4 Tr người đăng ký',
+    len: '2:04:37',
+    art: ['rgba(143,182,255,.2)', 'rgba(185,168,255,.14)'],
+    caption: '♪ nhạc lofi nhẹ nhàng ♪',
+  },
+  {
+    title: 'Jazz cà phê buổi sáng — nhạc nền thư giãn 3 giờ',
+    channel: 'Coffee Shop Vibes',
+    meta: '1,2 Tr lượt xem',
+    subs: '890 N người đăng ký',
+    len: '3:02:11',
+    art: ['rgba(214,166,110,.22)', 'rgba(180,120,80,.16)'],
+    caption: '♪ tiếng kèn saxophone ♪',
+  },
+  {
+    title: 'Deep focus mix cho lập trình viên',
+    channel: 'Focus Lab',
+    meta: '842 N lượt xem',
+    subs: '1,1 Tr người đăng ký',
+    len: '1:48:22',
+    art: ['rgba(127,214,200,.22)', 'rgba(94,150,214,.16)'],
+    caption: '♪ nhạc điện tử tối giản ♪',
+  },
+  {
+    title: 'Piano nhẹ nhàng khi trời mưa',
+    channel: 'Rainy Piano',
+    meta: '2,8 Tr lượt xem',
+    subs: '3,5 Tr người đăng ký',
+    len: '2:15:40',
+    art: ['rgba(150,170,214,.22)', 'rgba(110,130,180,.16)'],
+    caption: '♪ tiếng mưa và tiếng dương cầm ♪',
+  },
+  {
+    title: 'Synthwave đêm khuya — lái xe qua thành phố',
+    channel: 'Neon Drive',
+    meta: '410 N lượt xem',
+    subs: '260 N người đăng ký',
+    len: '58:07',
+    art: ['rgba(214,110,180,.22)', 'rgba(120,90,214,.18)'],
+    caption: '♪ synth bass dồn dập ♪',
+  },
+  {
+    title: 'Tiếng sóng biển 8 giờ để ngủ sâu',
+    channel: 'Nature Sound',
+    meta: '5,1 Tr lượt xem',
+    subs: '6,2 Tr người đăng ký',
+    len: '8:00:00',
+    art: ['rgba(110,180,190,.22)', 'rgba(60,120,150,.16)'],
+    caption: '♪ tiếng sóng vỗ bờ ♪',
+  },
 ]
+
+/** "H:MM:SS" or "M:SS" -> seconds */
+export function parseDuration(len: string): number {
+  const parts = len.split(':').map(Number)
+  return parts.reduce((total, part) => total * 60 + part, 0)
+}
+
+/** seconds -> "H:MM:SS" when over an hour, else "M:SS" */
+export function formatDuration(seconds: number): string {
+  const s = Math.max(0, Math.floor(seconds))
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = s % 60
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`
+}
 
 export const NOTIFICATIONS: Notification[] = [
   {

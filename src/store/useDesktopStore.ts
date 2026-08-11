@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { WindowId } from '../lib/types'
-import { formatClockVi } from '../lib/data'
+import { formatClockVi, parseDuration, VIDEOS } from '../lib/data'
 import { STAGE_HEIGHT, STAGE_WIDTH } from '../lib/constants'
 import { defaultPosFor, type Viewport } from '../lib/layout'
 import type { WindowPos } from '../lib/types'
@@ -81,6 +81,27 @@ interface DesktopState {
   setLibraryView: (view: string) => void
   nextTrack: () => void
   prevTrack: () => void
+
+  // ---- youtube ----
+  ytIndex: number
+  ytTime: number
+  ytPlaying: boolean
+  ytVolume: number
+  ytMuted: boolean
+  ytCaptions: boolean
+  ytSubscribed: boolean
+  ytLiked: boolean
+  ytQuery: string
+  playVideo: (index: number) => void
+  toggleYtPlaying: () => void
+  seekYt: (seconds: number) => void
+  setYtVolume: (v: number) => void
+  toggleYtMuted: () => void
+  toggleYtCaptions: () => void
+  toggleYtSubscribed: () => void
+  toggleYtLiked: () => void
+  setYtQuery: (q: string) => void
+  tickYt: () => void
 
   // ---- system ----
   wifi: boolean
@@ -266,6 +287,32 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       trackIndex: s.shuffle ? pickRandomOtherTrack(s.trackIndex) : (s.trackIndex - 1 + LIBRARY_LENGTH) % LIBRARY_LENGTH,
       playing: true,
     })),
+
+  ytIndex: 0,
+  ytTime: 2538, // opens partway in, like the design frame's "42:18"
+  ytPlaying: true,
+  ytVolume: 70,
+  ytMuted: false,
+  ytCaptions: false,
+  ytSubscribed: false,
+  ytLiked: false,
+  ytQuery: '',
+  playVideo: (index) => set({ ytIndex: index, ytTime: 0, ytPlaying: true }),
+  toggleYtPlaying: () => set((s) => ({ ytPlaying: !s.ytPlaying })),
+  seekYt: (seconds) => set({ ytTime: Math.max(0, seconds) }),
+  setYtVolume: (v) => set({ ytVolume: v, ytMuted: v === 0 }),
+  toggleYtMuted: () => set((s) => ({ ytMuted: !s.ytMuted })),
+  toggleYtCaptions: () => set((s) => ({ ytCaptions: !s.ytCaptions })),
+  toggleYtSubscribed: () => set((s) => ({ ytSubscribed: !s.ytSubscribed })),
+  toggleYtLiked: () => set((s) => ({ ytLiked: !s.ytLiked })),
+  setYtQuery: (q) => set({ ytQuery: q }),
+  tickYt: () =>
+    set((s) => {
+      if (!s.ytPlaying) return {}
+      const duration = parseDuration(VIDEOS[s.ytIndex].len)
+      if (s.ytTime >= duration) return { ytPlaying: false, ytTime: duration }
+      return { ytTime: s.ytTime + 1 }
+    }),
 
   wifi: true,
   bt: true,

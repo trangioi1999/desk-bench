@@ -63,7 +63,9 @@ export function WindowChrome({
   const resizeRef = useRef<ResizeState | null>(null)
 
   const handleTitlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('button')) return
+    // Controls living in the titlebar (traffic lights, the YouTube search box)
+    // must keep their own pointer behaviour instead of starting a drag.
+    if ((e.target as HTMLElement).closest('button, input')) return
     if (!onMove) return
     e.currentTarget.setPointerCapture(e.pointerId)
     dragRef.current = { startX: e.clientX, startY: e.clientY, startTop: top, startLeft: left }
