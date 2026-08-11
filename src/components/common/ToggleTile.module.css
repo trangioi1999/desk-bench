@@ -1,0 +1,34 @@
+.tile {
+  padding: 12px;
+  border-radius: var(--r-panel-inner);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  transition: background-color 0.15s ease;
+}
+
+.tile.large {
+  padding: 14px;
+  gap: 14px;
+}
+
+.label {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.tile.large .label {
+  font-size: 13.5px;
+}
+
+.sub {
+  font-size: 11px;
+}
+.tile.large .sub {
+  font-size: 11.5px;
+  margin-top: 2px;
+}

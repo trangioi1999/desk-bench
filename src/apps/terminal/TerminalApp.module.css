@@ -1,0 +1,31 @@
+.body {
+  padding: 18px 20px 22px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  color: var(--text-body-3);
+}
+
+.path {
+  color: var(--accent);
+}
+.chevron {
+  color: var(--text-tertiary-3);
+}
+.output {
+  color: var(--text-tertiary-2);
+}
+.branch {
+  color: var(--accent2);
+}
+.gap {
+  height: 8px;
+}
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  vertical-align: -3px;
+  background: var(--accent);
+  animation: deskbench-blink 1s step-end infinite;
+}

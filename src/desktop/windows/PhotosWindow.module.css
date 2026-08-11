@@ -1,0 +1,19 @@
+.grid {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.tile {
+  aspect-ratio: 1;
+  border-radius: 12px;
+}
+
+.caption {
+  padding: 0 14px 14px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-tertiary-3);
+  letter-spacing: 0.4px;
+}

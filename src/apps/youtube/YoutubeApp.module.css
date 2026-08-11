@@ -1,0 +1,265 @@
+.searchChipWrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.searchChip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 340px;
+  padding: 5px 12px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.searchChipText {
+  font-size: 12px;
+  color: var(--text-tertiary-2);
+}
+.titlebarSpacer {
+  width: 51px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+}
+
+.playerCol {
+  padding: 16px;
+}
+
+.player {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    linear-gradient(150deg, rgba(143, 182, 255, 0.2), rgba(185, 168, 255, 0.14)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 10px, rgba(255, 255, 255, 0.015) 10px 20px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+.playGlass {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 14, 20, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.controlBar {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(12, 14, 20, 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.scrubTrack {
+  position: relative;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.2);
+}
+.scrubFill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 99px;
+  background: var(--accent);
+}
+.scrubKnob {
+  position: absolute;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: #fff;
+}
+.controlRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-body);
+}
+.controlRow button {
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+}
+.controlTime {
+  font-size: 11.5px;
+  color: var(--text-body-3);
+  font-variant-numeric: tabular-nums;
+}
+.spacer {
+  flex: 1;
+}
+
+.meta {
+  padding: 16px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.videoTitle {
+  font-size: 17px;
+  font-weight: 600;
+  color: #f4f7fc;
+  letter-spacing: -0.2px;
+  text-wrap: pretty;
+}
+
+.channelRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: none;
+  background: linear-gradient(150deg, rgba(143, 182, 255, 0.4), rgba(185, 168, 255, 0.3));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.channelMeta {
+  flex: 1;
+}
+.channelName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+}
+.channelSubs {
+  font-size: 11.5px;
+  color: var(--text-tertiary-2);
+  margin-top: 2px;
+}
+.subscribeBtn {
+  padding: 8px 16px;
+  border-radius: 11px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-on-white);
+  background: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  border: none;
+}
+.likeChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 11px;
+  font-size: 12.5px;
+  color: var(--text-body-2);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  border: none;
+  cursor: pointer;
+}
+
+.rail {
+  padding: 16px 16px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.railLabel {
+  font-size: 10.5px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding-left: 2px;
+}
+.railItem {
+  display: flex;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
+}
+.railItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.railThumb {
+  position: relative;
+  width: 104px;
+  height: 60px;
+  flex: none;
+  border-radius: 9px;
+  overflow: hidden;
+  background:
+    linear-gradient(150deg, rgba(143, 182, 255, 0.18), rgba(185, 168, 255, 0.12)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0 6px, rgba(255, 255, 255, 0.02) 6px 12px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.railDuration {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  font-size: 9.5px;
+  color: var(--text-body);
+  background: rgba(10, 12, 17, 0.7);
+}
+.railMeta {
+  min-width: 0;
+}
+.railTitle {
+  font-size: 12.5px;
+  color: var(--text-body);
+  line-height: 1.35;
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.railChannel {
+  font-size: 11px;
+  color: var(--text-tertiary-2);
+  margin-top: 4px;
+}
+.railViews {
+  font-size: 11px;
+  color: var(--text-tertiary-3);
+  margin-top: 2px;
+}

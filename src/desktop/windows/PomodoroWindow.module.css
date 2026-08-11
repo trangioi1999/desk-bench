@@ -1,0 +1,72 @@
+.body {
+  padding: 24px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--text-tertiary-2);
+}
+
+.ringWrap {
+  position: relative;
+  width: 196px;
+  height: 196px;
+}
+
+.ringOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.time {
+  font-size: 46px;
+  font-weight: 250;
+  letter-spacing: -1px;
+  color: var(--text-primary-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.session {
+  font-size: 11px;
+  color: var(--text-tertiary-2);
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.primary {
+  padding: 9px 22px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-on-accent);
+  background: var(--accent);
+  box-shadow: 0 6px 18px -8px rgba(143, 182, 255, 0.9);
+  border: none;
+}
+
+.secondary {
+  padding: 9px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-body-2);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border: none;
+}

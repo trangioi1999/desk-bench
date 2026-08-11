@@ -1,0 +1,88 @@
+:root {
+  /* accent */
+  --accent: #8fb6ff;
+  --accent2: #b9a8ff;
+
+  /* traffic lights */
+  --tl-red: #f4645c;
+  --tl-yellow: #f5bd4f;
+  --tl-green: #61c554;
+  --alert-red: #f4645c;
+
+  /* text */
+  --text-primary: #f0f3fa;
+  --text-primary-strong: #f6f8fd;
+  --text-body: #eef1f8;
+  --text-body-2: #dbe2ef;
+  --text-body-3: #cfd7e6;
+  --text-secondary: #98a1b3;
+  --text-secondary-2: #a3abbd;
+  --text-tertiary: #7f8798;
+  --text-tertiary-2: #8b94a7;
+  --text-tertiary-3: #6f7889;
+  --text-on-accent: #0d1017;
+  --text-on-white: #1a1f2b;
+
+  /* glass surfaces */
+  --glass-menubar: rgba(18, 21, 29, 0.55);
+  --glass-menubar-blur: blur(28px) saturate(160%);
+  --glass-dock: rgba(26, 29, 39, 0.5);
+  --glass-dock-blur: blur(32px) saturate(180%);
+  --glass-panel: rgba(24, 27, 36, 0.6);
+  --glass-panel-blur: blur(34px) saturate(180%);
+  --glass-spotlight: rgba(26, 29, 39, 0.62);
+  --glass-spotlight-blur: blur(38px) saturate(180%);
+  --glass-window: rgba(21, 24, 33, 0.84);
+  --glass-window-blur: blur(30px) saturate(150%);
+  --glass-terminal: rgba(14, 16, 23, 0.9);
+  --glass-titlebar: rgba(255, 255, 255, 0.06);
+  --glass-raised: rgba(255, 255, 255, 0.07);
+  --glass-hover: rgba(255, 255, 255, 0.08);
+  --hairline: rgba(255, 255, 255, 0.1);
+  --divider: rgba(255, 255, 255, 0.08);
+
+  /* radii */
+  --r-mark: 5px;
+  --r-chip: 8px;
+  --r-row: 12px;
+  --r-button: 14px;
+  --r-dock-icon: 15px;
+  --r-panel-inner: 18px;
+  --r-window: 18px;
+  --r-switcher-tile: 19px;
+  --r-panel: 22px;
+  --r-stage: 20px;
+  --r-full: 50%;
+
+  /* shadows */
+  --shadow-panel: 0 30px 65px -21px rgba(0, 0, 0, 0.78);
+  --shadow-window-focused: 0 40px 80px -28px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-window-unfocused: 0 16px 38px -20px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-dock: 0 20px 44px -18px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-primary-button: 0 10px 24px -10px rgba(143, 182, 255, 0.9);
+
+  /* typography */
+  --font-sans: system-ui, -apple-system, 'Helvetica Neue', 'Segoe UI', Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* spacing scale */
+  --sp-1: 2px;
+  --sp-2: 4px;
+  --sp-3: 6px;
+  --sp-4: 8px;
+  --sp-5: 10px;
+  --sp-6: 12px;
+  --sp-7: 14px;
+  --sp-8: 16px;
+  --sp-9: 18px;
+  --sp-10: 20px;
+  --sp-11: 22px;
+  --sp-12: 24px;
+  --sp-13: 30px;
+  --sp-14: 34px;
+  --sp-15: 40px;
+}

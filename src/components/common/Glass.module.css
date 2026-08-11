@@ -1,0 +1,36 @@
+.menubar {
+  background: var(--glass-menubar);
+  backdrop-filter: var(--glass-menubar-blur);
+  -webkit-backdrop-filter: var(--glass-menubar-blur);
+}
+
+.dock {
+  background: var(--glass-dock);
+  backdrop-filter: var(--glass-dock-blur);
+  -webkit-backdrop-filter: var(--glass-dock-blur);
+  box-shadow: var(--shadow-dock);
+}
+
+.panel {
+  background: var(--glass-panel);
+  backdrop-filter: var(--glass-panel-blur);
+  -webkit-backdrop-filter: var(--glass-panel-blur);
+}
+
+.spotlight {
+  background: var(--glass-spotlight);
+  backdrop-filter: var(--glass-spotlight-blur);
+  -webkit-backdrop-filter: var(--glass-spotlight-blur);
+}
+
+.window {
+  background: var(--glass-window);
+  backdrop-filter: var(--glass-window-blur);
+  -webkit-backdrop-filter: var(--glass-window-blur);
+}
+
+.terminal {
+  background: var(--glass-terminal);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}

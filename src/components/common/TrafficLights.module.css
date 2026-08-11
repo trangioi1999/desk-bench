@@ -1,0 +1,16 @@
+.row {
+  display: flex;
+  gap: 9px;
+}
+.row.compact {
+  gap: 8px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.dot.compact {
+  width: 11px;
+  height: 11px;
+}

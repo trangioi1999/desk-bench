@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="#11141c"/>
+      <stop offset="55%" stop-color="#0c0e15"/>
+      <stop offset="100%" stop-color="#090b11"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="26%" cy="22%" r="55%">
+      <stop offset="0%" stop-color="#5e7cd6" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#5e7cd6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="80%" cy="34%" r="50%">
+      <stop offset="0%" stop-color="#9674d6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#9674d6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="0.85" y2="1">
+      <stop offset="0%" stop-color="#8fb6ff"/>
+      <stop offset="100%" stop-color="#b9a8ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#glow1)"/>
+  <rect width="512" height="512" fill="url(#glow2)"/>
+
+  <rect x="144" y="144" width="224" height="224" rx="56" fill="url(#mark)"/>
+  <g transform="translate(144,144)">
+    <circle cx="34" cy="34" r="9" fill="rgba(13,16,23,.28)"/>
+    <circle cx="62" cy="34" r="9" fill="rgba(13,16,23,.2)"/>
+    <circle cx="90" cy="34" r="9" fill="rgba(13,16,23,.14)"/>
+    <rect x="26" y="60" width="172" height="1.5" fill="rgba(13,16,23,.18)"/>
+  </g>
+</svg>
