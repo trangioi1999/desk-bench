@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react'
 import { WindowChrome } from '../../components/common/WindowChrome'
+import type { WindowFrameProps } from '../../lib/types'
 import styles from './PhotosWindow.module.css'
 
 const TILE_TINTS = [
@@ -13,14 +13,9 @@ const TILE_TINTS = [
   'rgba(255,255,255,.06)',
 ]
 
-interface PhotosWindowProps {
-  style: CSSProperties
-  onFocus: () => void
-}
-
-export function PhotosWindow({ style, onFocus }: PhotosWindowProps) {
+export function PhotosWindow(frame: WindowFrameProps) {
   return (
-    <WindowChrome title="Ảnh" compact style={style} onMouseDown={onFocus}>
+    <WindowChrome title="Ảnh" compact {...frame}>
       <div className={styles.grid}>
         {TILE_TINTS.map((tint, i) => (
           <div

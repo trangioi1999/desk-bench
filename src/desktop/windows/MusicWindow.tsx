@@ -1,30 +1,26 @@
-import type { CSSProperties } from 'react'
 import { WindowChrome } from '../../components/common/WindowChrome'
 import { useDesktopStore } from '../../store/useDesktopStore'
 import { LIBRARY } from '../../lib/data'
 import { NextIcon, PauseIcon, PlayIcon, PrevIcon } from '../../components/icons'
+import type { WindowFrameProps } from '../../lib/types'
 import styles from './MusicWindow.module.css'
 
 const SEEK_PCT = 38
 
-interface MusicWindowProps {
-  style: CSSProperties
-  onFocus: () => void
+interface MusicWindowProps extends WindowFrameProps {
   onExpand: () => void
 }
 
-export function MusicWindow({ style, onFocus, onExpand }: MusicWindowProps) {
+export function MusicWindow({ onExpand, ...frame }: MusicWindowProps) {
   const trackIndex = useDesktopStore((s) => s.trackIndex)
   const playing = useDesktopStore((s) => s.playing)
   const togglePlay = useDesktopStore((s) => s.togglePlay)
-  const pickTrack = useDesktopStore((s) => s.pickTrack)
+  const nextTrack = useDesktopStore((s) => s.nextTrack)
+  const prevTrack = useDesktopStore((s) => s.prevTrack)
   const track = LIBRARY[trackIndex]
 
-  const goPrev = () => pickTrack((trackIndex - 1 + LIBRARY.length) % LIBRARY.length)
-  const goNext = () => pickTrack((trackIndex + 1) % LIBRARY.length)
-
   return (
-    <WindowChrome title="Nhạc" compact style={style} onMouseDown={onFocus} onDoubleClickTitlebar={onExpand}>
+    <WindowChrome title="Nhạc" compact {...frame} onDoubleClickTitlebar={onExpand}>
       <div className={styles.body}>
         <div className={styles.head}>
           <div className={styles.art} />
@@ -43,13 +39,13 @@ export function MusicWindow({ style, onFocus, onExpand }: MusicWindowProps) {
           </div>
         </div>
         <div className={styles.transport}>
-          <button type="button" onClick={goPrev} aria-label="Bài trước">
+          <button type="button" onClick={prevTrack} aria-label="Bài trước">
             <PrevIcon size={20} />
           </button>
           <button type="button" className={styles.playButton} onClick={togglePlay} aria-label="Phát/Tạm dừng">
             {playing ? <PauseIcon size={20} /> : <PlayIcon size={20} />}
           </button>
-          <button type="button" onClick={goNext} aria-label="Bài tiếp theo">
+          <button type="button" onClick={nextTrack} aria-label="Bài tiếp theo">
             <NextIcon size={20} />
           </button>
         </div>

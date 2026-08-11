@@ -32,11 +32,30 @@ export const LIBRARY: Track[] = [
   { title: 'Trên Tình Bạn Dưới Tình Yêu', artist: 'MIN', album: 'Single', dur: '3:18' },
 ]
 
+export const PLAYLIST_TRACK_INDICES: Record<string, number[]> = {
+  'Chill chiều muộn': [0, 1, 2, 3, 4, 5, 6, 7],
+  'Deep work': [1, 2, 6],
+  'Nhạc Việt xưa': [0, 1, 5],
+  'Ngủ ngon': [1, 6],
+}
+
+export function durationToSeconds(dur: string): number {
+  const [m, s] = dur.split(':').map(Number)
+  return m * 60 + s
+}
+
+export function sumDurations(tracks: { dur: string }[]): string {
+  const totalSeconds = tracks.reduce((sum, t) => sum + durationToSeconds(t.dur), 0)
+  const minutes = Math.round(totalSeconds / 60)
+  if (minutes < 60) return `${minutes} phút`
+  return `${Math.floor(minutes / 60)} giờ ${minutes % 60} phút`
+}
+
 export const PLAYLISTS: Playlist[] = [
-  { name: 'Chill chiều muộn', count: 12, swatch: 'linear-gradient(150deg,#8fb6ff,#b9a8ff)' },
-  { name: 'Deep work', count: 24, swatch: 'linear-gradient(150deg,#7fd6c8,#8fb6ff)' },
-  { name: 'Nhạc Việt xưa', count: 38, swatch: 'linear-gradient(150deg,#f2b8a0,#e08fa8)' },
-  { name: 'Ngủ ngon', count: 9, swatch: 'linear-gradient(150deg,#7a86b8,#4d5578)' },
+  { name: 'Chill chiều muộn', count: 8, swatch: 'linear-gradient(150deg,#8fb6ff,#b9a8ff)' },
+  { name: 'Deep work', count: 3, swatch: 'linear-gradient(150deg,#7fd6c8,#8fb6ff)' },
+  { name: 'Nhạc Việt xưa', count: 3, swatch: 'linear-gradient(150deg,#f2b8a0,#e08fa8)' },
+  { name: 'Ngủ ngon', count: 2, swatch: 'linear-gradient(150deg,#7a86b8,#4d5578)' },
 ]
 
 export const VIDEOS: Video[] = [

@@ -1,9 +1,25 @@
+import type { CSSProperties } from 'react'
+
 export type WindowId = 'photos' | 'music' | 'pomodoro' | 'youtube' | 'terminal' | 'settings'
 
 export interface WindowPos {
   top: number
   left: number
   width: number
+}
+
+/** Props every window content component receives from WindowManager, spread
+ * straight onto its WindowChrome — position, visual state and the
+ * close/minimize/maximize/drag wiring, all keyed to match WindowChrome's own props. */
+export interface WindowFrameProps {
+  top: number
+  left: number
+  style: CSSProperties
+  onMouseDown: () => void
+  onMove?: (top: number, left: number) => void
+  onClose: () => void
+  onMinimize: () => void
+  onMaximize: () => void
 }
 
 export interface Track {

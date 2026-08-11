@@ -30,6 +30,8 @@ export function youtubeTitleSlot() {
 
 export function YoutubeApp() {
   const [playing, setPlaying] = useState(true)
+  const [subscribed, setSubscribed] = useState(false)
+  const [liked, setLiked] = useState(false)
 
   return (
     <div className={styles.layout}>
@@ -78,12 +80,27 @@ export function YoutubeApp() {
               <div className={styles.channelName}>Chill Study Radio</div>
               <div className={styles.channelSubs}>2,4 Tr người đăng ký</div>
             </div>
-            <button type="button" className={styles.subscribeBtn}>
-              Đăng ký
+            <button
+              type="button"
+              className={styles.subscribeBtn}
+              onClick={() => setSubscribed((v) => !v)}
+              style={
+                subscribed
+                  ? { background: 'rgba(255,255,255,.08)', color: 'var(--text-body-2)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.1)' }
+                  : undefined
+              }
+            >
+              {subscribed ? 'Đã đăng ký' : 'Đăng ký'}
             </button>
-            <button type="button" className={styles.likeChip}>
-              <LikeIcon size={15} />
-              18 N
+            <button
+              type="button"
+              className={styles.likeChip}
+              onClick={() => setLiked((v) => !v)}
+              aria-pressed={liked}
+              style={liked ? { color: 'var(--accent)', background: 'rgba(143,182,255,.14)' } : undefined}
+            >
+              <LikeIcon size={15} color={liked ? 'var(--accent)' : undefined} />
+              {liked ? '19 N' : '18 N'}
             </button>
           </div>
         </div>

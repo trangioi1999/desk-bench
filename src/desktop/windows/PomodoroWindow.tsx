@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react'
 import { WindowChrome } from '../../components/common/WindowChrome'
 import { ProgressRing } from '../../components/common/ProgressRing'
 import { useDesktopStore } from '../../store/useDesktopStore'
+import type { WindowFrameProps } from '../../lib/types'
 import styles from './PomodoroWindow.module.css'
 
 function formatTime(seconds: number) {
@@ -10,12 +10,7 @@ function formatTime(seconds: number) {
   return `${mm}:${ss}`
 }
 
-interface PomodoroWindowProps {
-  style: CSSProperties
-  onFocus: () => void
-}
-
-export function PomodoroWindow({ style, onFocus }: PomodoroWindowProps) {
+export function PomodoroWindow(frame: WindowFrameProps) {
   const left = useDesktopStore((s) => s.pomodoroLeft)
   const total = useDesktopStore((s) => s.pomodoroTotal)
   const running = useDesktopStore((s) => s.pomodoroRunning)
@@ -23,7 +18,7 @@ export function PomodoroWindow({ style, onFocus }: PomodoroWindowProps) {
   const reset = useDesktopStore((s) => s.resetPomodoro)
 
   return (
-    <WindowChrome title="Pomodoro" compact style={style} onMouseDown={onFocus}>
+    <WindowChrome title="Pomodoro" compact {...frame}>
       <div className={styles.body}>
         <div className={styles.label}>Tập trung sâu</div>
         <div className={styles.ringWrap}>

@@ -5,6 +5,12 @@ import { useDesktopStore } from './useDesktopStore'
  * Mounted once at the app root. */
 export function useDesktopEffects() {
   useEffect(() => {
+    const onResize = () => {
+      useDesktopStore.getState().setViewport(window.innerWidth, window.innerHeight)
+    }
+    onResize()
+    window.addEventListener('resize', onResize)
+
     const tick = window.setInterval(() => {
       useDesktopStore.getState().tickPomodoro()
     }, 1000)
@@ -53,6 +59,7 @@ export function useDesktopEffects() {
       window.clearInterval(clockTick)
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('resize', onResize)
     }
   }, [])
 }

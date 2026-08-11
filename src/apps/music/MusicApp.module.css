@@ -34,7 +34,12 @@
   border-radius: 11px;
   font-size: 13px;
   color: var(--text-secondary-2);
-  cursor: default;
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-align: left;
+  font-family: inherit;
+  width: 100%;
 }
 .sideRow.active {
   color: var(--text-body);
@@ -150,7 +155,7 @@
 
 .tableHead {
   display: grid;
-  grid-template-columns: 26px 1fr 150px 48px;
+  grid-template-columns: 26px 1fr 150px 48px 28px;
   gap: 12px;
   padding: 6px 12px 10px;
   font-size: 10.5px;
@@ -164,20 +169,39 @@
 
 .row {
   display: grid;
-  grid-template-columns: 26px 1fr 150px 48px;
+  grid-template-columns: 26px 1fr 150px 48px 28px;
   gap: 12px;
   align-items: center;
   padding: 9px 12px;
   border-radius: 12px;
   cursor: pointer;
-  border: none;
-  background: transparent;
-  text-align: left;
-  font-family: inherit;
-  width: 100%;
 }
 .row:hover {
   background: rgba(255, 255, 255, 0.06);
+}
+
+.favBtn {
+  border: none;
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary-3);
+  cursor: pointer;
+}
+.favBtn.on {
+  color: var(--alert-red);
+}
+.favBtn.on svg {
+  fill: currentColor;
+}
+
+.emptyState {
+  padding: 40px 16px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-tertiary);
 }
 
 .num {

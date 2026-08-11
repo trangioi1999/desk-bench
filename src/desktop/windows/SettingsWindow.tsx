@@ -1,15 +1,10 @@
-import type { CSSProperties } from 'react'
 import { WindowChrome } from '../../components/common/WindowChrome'
 import { SettingsIcon } from '../../components/icons'
+import type { WindowFrameProps } from '../../lib/types'
 
-interface SettingsWindowProps {
-  style: CSSProperties
-  onFocus: () => void
-}
-
-export function SettingsWindow({ style, onFocus }: SettingsWindowProps) {
+export function SettingsWindow(frame: WindowFrameProps) {
   return (
-    <WindowChrome title="Cài đặt hệ thống" compact style={style} onMouseDown={onFocus}>
+    <WindowChrome title="Cài đặt hệ thống" compact {...frame}>
       <div
         style={{
           padding: '40px 24px',

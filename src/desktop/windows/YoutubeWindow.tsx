@@ -1,15 +1,10 @@
-import type { CSSProperties } from 'react'
 import { WindowChrome } from '../../components/common/WindowChrome'
 import { YoutubeApp, youtubeTitleSlot } from '../../apps/youtube/YoutubeApp'
+import type { WindowFrameProps } from '../../lib/types'
 
-interface YoutubeWindowProps {
-  style: CSSProperties
-  onFocus: () => void
-}
-
-export function YoutubeWindow({ style, onFocus }: YoutubeWindowProps) {
+export function YoutubeWindow(frame: WindowFrameProps) {
   return (
-    <WindowChrome title={youtubeTitleSlot()} style={style} onMouseDown={onFocus}>
+    <WindowChrome title={youtubeTitleSlot()} {...frame}>
       <YoutubeApp />
     </WindowChrome>
   )

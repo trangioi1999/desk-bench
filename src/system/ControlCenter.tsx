@@ -34,13 +34,11 @@ export function ControlCenter() {
   const trackIndex = useDesktopStore((s) => s.trackIndex)
   const playing = useDesktopStore((s) => s.playing)
   const togglePlay = useDesktopStore((s) => s.togglePlay)
-  const pickTrack = useDesktopStore((s) => s.pickTrack)
+  const nextTrack = useDesktopStore((s) => s.nextTrack)
+  const prevTrack = useDesktopStore((s) => s.prevTrack)
   const now = LIBRARY[trackIndex]
 
   if (!cc) return null
-
-  const goPrev = () => pickTrack((trackIndex - 1 + LIBRARY.length) % LIBRARY.length)
-  const goNext = () => pickTrack((trackIndex + 1) % LIBRARY.length)
 
   return (
     <div className={`${styles.panel} ${glass.panel}`} onMouseDown={(e) => e.stopPropagation()}>
@@ -99,13 +97,13 @@ export function ControlCenter() {
           <div className={styles.miniArtist}>{now.artist}</div>
         </div>
         <div className={styles.miniTransport}>
-          <button type="button" onClick={goPrev} aria-label="Bài trước">
+          <button type="button" onClick={prevTrack} aria-label="Bài trước">
             <PrevIcon size={18} />
           </button>
           <button type="button" onClick={togglePlay} aria-label="Phát/Tạm dừng">
             {playing ? <PauseIcon size={20} /> : <PlayIcon size={20} />}
           </button>
-          <button type="button" onClick={goNext} aria-label="Bài tiếp theo">
+          <button type="button" onClick={nextTrack} aria-label="Bài tiếp theo">
             <NextIcon size={18} />
           </button>
         </div>

@@ -1,20 +1,34 @@
 import { create } from 'zustand'
 import type { WindowId } from '../lib/types'
 import { formatClockVi } from '../lib/data'
+import { STAGE_HEIGHT, STAGE_WIDTH } from '../lib/constants'
+import { defaultPosFor, type Viewport } from '../lib/layout'
+import type { WindowPos } from '../lib/types'
 
 export const POMODORO_MINUTES = 25
 const POMODORO_TOTAL = POMODORO_MINUTES * 60
+let toastTimer: number | undefined
 
 interface DesktopState {
+  // ---- viewport ----
+  viewport: Viewport
+  setViewport: (width: number, height: number) => void
+
   // ---- windows ----
   openWindows: WindowId[]
   focused: WindowId | null
   musicExpanded: boolean
+  windowBounds: Partial<Record<WindowId, WindowPos>>
+  windowMinimized: Partial<Record<WindowId, boolean>>
+  windowMaximized: Partial<Record<WindowId, boolean>>
   openWindow: (id: WindowId) => void
   closeWindow: (id: WindowId) => void
   focusWindow: (id: WindowId) => void
   toggleDockApp: (id: WindowId) => void
   toggleMusicExpanded: () => void
+  minimizeWindow: (id: WindowId) => void
+  toggleMaximize: (id: WindowId) => void
+  setWindowPos: (id: WindowId, top: number, left: number) => void
 
   // ---- overlays: control center / spotlight / notification center ----
   cc: boolean
@@ -31,6 +45,10 @@ interface DesktopState {
   ctxMenu: { open: boolean; x: number; y: number }
   openCtxMenu: (x: number, y: number) => void
   closeCtxMenu: () => void
+
+  // ---- toast (lightweight feedback for actions with no real backing system) ----
+  toast: string | null
+  showToast: (message: string) => void
 
   // ---- app switcher (Cmd/Ctrl+Tab) ----
   switcherOpen: boolean
@@ -51,8 +69,17 @@ interface DesktopState {
   // ---- music ----
   trackIndex: number
   playing: boolean
+  shuffle: boolean
+  favorites: number[]
+  /** 'recent' | 'favorites' | 'albums' | a playlist name */
+  libraryView: string
   pickTrack: (i: number) => void
   togglePlay: () => void
+  toggleShuffle: () => void
+  toggleFavorite: (i: number) => void
+  setLibraryView: (view: string) => void
+  nextTrack: () => void
+  prevTrack: () => void
 
   // ---- system ----
   wifi: boolean
@@ -68,45 +95,91 @@ interface DesktopState {
   setBright: (n: number) => void
   setVol: (n: number) => void
 
+  // ---- wallpaper ----
+  wallpaperIndex: number
+  cycleWallpaper: () => void
+
   // ---- clock ----
   clock: string
   tickClock: () => void
 }
 
+const LIBRARY_LENGTH = 8
+
+function pickRandomOtherTrack(current: number) {
+  if (LIBRARY_LENGTH <= 1) return current
+  let next = current
+  while (next === current) next = Math.floor(Math.random() * LIBRARY_LENGTH)
+  return next
+}
+
 export const useDesktopStore = create<DesktopState>((set, get) => ({
+  viewport: { width: STAGE_WIDTH, height: STAGE_HEIGHT },
+  setViewport: (width, height) => set({ viewport: { width, height } }),
+
   openWindows: ['photos', 'music', 'pomodoro'],
   focused: 'pomodoro',
   musicExpanded: false,
+  windowBounds: {},
+  windowMinimized: {},
+  windowMaximized: {},
 
   openWindow: (id) =>
-    set((s) => ({
-      openWindows: s.openWindows.includes(id) ? s.openWindows : [...s.openWindows, id],
-      focused: id,
-    })),
+    set((s) => {
+      if (s.openWindows.includes(id)) {
+        return {
+          openWindows: [...s.openWindows.filter((w) => w !== id), id],
+          focused: id,
+          windowMinimized: { ...s.windowMinimized, [id]: false },
+        }
+      }
+      return {
+        openWindows: [...s.openWindows, id],
+        focused: id,
+        windowBounds: { ...s.windowBounds, [id]: s.windowBounds[id] ?? defaultPosFor(id, s.viewport) },
+        windowMinimized: { ...s.windowMinimized, [id]: false },
+      }
+    }),
   closeWindow: (id) =>
-    set((s) => ({
-      openWindows: s.openWindows.filter((w) => w !== id),
-      focused: s.focused === id ? s.openWindows.filter((w) => w !== id).at(-1) ?? null : s.focused,
-      musicExpanded: id === 'music' ? false : s.musicExpanded,
-    })),
+    set((s) => {
+      const remaining = s.openWindows.filter((w) => w !== id)
+      return {
+        openWindows: remaining,
+        focused: s.focused === id ? remaining.at(-1) ?? null : s.focused,
+        musicExpanded: id === 'music' ? false : s.musicExpanded,
+        windowMinimized: { ...s.windowMinimized, [id]: false },
+        windowMaximized: { ...s.windowMaximized, [id]: false },
+      }
+    }),
   focusWindow: (id) =>
     set((s) => ({
       openWindows: [...s.openWindows.filter((w) => w !== id), id],
       focused: id,
+      windowMinimized: { ...s.windowMinimized, [id]: false },
     })),
   toggleDockApp: (id) => {
     const s = get()
-    if (s.openWindows.includes(id)) {
-      if (s.focused === id) {
-        if (id === 'music') get().toggleMusicExpanded()
-      } else {
-        get().focusWindow(id)
-      }
-    } else {
+    if (!s.openWindows.includes(id)) {
       get().openWindow(id)
+    } else if (s.windowMinimized[id]) {
+      get().focusWindow(id)
+    } else if (s.focused === id) {
+      if (id === 'music') get().toggleMusicExpanded()
+    } else {
+      get().focusWindow(id)
     }
   },
   toggleMusicExpanded: () => set((s) => ({ musicExpanded: !s.musicExpanded })),
+  minimizeWindow: (id) =>
+    set((s) => {
+      const remainingVisible = s.openWindows.filter((w) => w !== id && !s.windowMinimized[w])
+      return {
+        windowMinimized: { ...s.windowMinimized, [id]: true },
+        focused: s.focused === id ? remainingVisible.at(-1) ?? null : s.focused,
+      }
+    }),
+  toggleMaximize: (id) => set((s) => ({ windowMaximized: { ...s.windowMaximized, [id]: !s.windowMaximized[id] } })),
+  setWindowPos: (id, top, left) => set((s) => ({ windowBounds: { ...s.windowBounds, [id]: { ...s.windowBounds[id]!, top, left } } })),
 
   cc: true,
   spot: false,
@@ -121,6 +194,13 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
   ctxMenu: { open: false, x: 0, y: 0 },
   openCtxMenu: (x, y) => set({ ctxMenu: { open: true, x, y }, cc: false, spot: false, notif: false }),
   closeCtxMenu: () => set({ ctxMenu: { open: false, x: 0, y: 0 } }),
+
+  toast: null,
+  showToast: (message) => {
+    set({ toast: message })
+    window.clearTimeout(toastTimer)
+    toastTimer = window.setTimeout(() => set({ toast: null }), 1600)
+  },
 
   switcherOpen: false,
   switcherIndex: 0,
@@ -152,8 +232,27 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
 
   trackIndex: 0,
   playing: true,
+  shuffle: false,
+  favorites: [],
+  libraryView: 'Chill chiều muộn',
   pickTrack: (i) => set({ trackIndex: i, playing: true }),
   togglePlay: () => set((s) => ({ playing: !s.playing })),
+  toggleShuffle: () => set((s) => ({ shuffle: !s.shuffle })),
+  toggleFavorite: (i) =>
+    set((s) => ({
+      favorites: s.favorites.includes(i) ? s.favorites.filter((f) => f !== i) : [...s.favorites, i],
+    })),
+  setLibraryView: (view) => set({ libraryView: view }),
+  nextTrack: () =>
+    set((s) => ({
+      trackIndex: s.shuffle ? pickRandomOtherTrack(s.trackIndex) : (s.trackIndex + 1) % LIBRARY_LENGTH,
+      playing: true,
+    })),
+  prevTrack: () =>
+    set((s) => ({
+      trackIndex: s.shuffle ? pickRandomOtherTrack(s.trackIndex) : (s.trackIndex - 1 + LIBRARY_LENGTH) % LIBRARY_LENGTH,
+      playing: true,
+    })),
 
   wifi: true,
   bt: true,
@@ -167,6 +266,9 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
   toggleDark: () => set((s) => ({ dark: !s.dark })),
   setBright: (n) => set({ bright: n }),
   setVol: (n) => set({ vol: n }),
+
+  wallpaperIndex: 0,
+  cycleWallpaper: () => set((s) => ({ wallpaperIndex: (s.wallpaperIndex + 1) % 4 })),
 
   clock: formatClockVi(new Date()),
   tickClock: () => set({ clock: formatClockVi(new Date()) }),
