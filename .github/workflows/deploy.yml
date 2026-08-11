@@ -25,7 +25,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # `enablement` asks GitHub to switch Pages to the "GitHub Actions" build
+      # type. Without it, a repo left on "Deploy from a branch" serves the raw
+      # source — index.html then points at /src/main.tsx and the page is blank.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
