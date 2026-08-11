@@ -92,6 +92,10 @@ interface DesktopState {
   ytSubscribed: boolean
   ytLiked: boolean
   ytQuery: string
+  /** YouTube ids bound at runtime by pasting a link, keyed by video index.
+   * Overrides the seeded `ytId` so any entry can be pointed at a real video. */
+  ytBoundIds: Record<number, string>
+  bindYtId: (index: number, id: string) => void
   playVideo: (index: number) => void
   toggleYtPlaying: () => void
   seekYt: (seconds: number) => void
@@ -297,6 +301,9 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
   ytSubscribed: false,
   ytLiked: false,
   ytQuery: '',
+  ytBoundIds: {},
+  bindYtId: (index, id) =>
+    set((s) => ({ ytBoundIds: { ...s.ytBoundIds, [index]: id }, ytIndex: index, ytTime: 0, ytPlaying: true, ytQuery: '' })),
   playVideo: (index) => set({ ytIndex: index, ytTime: 0, ytPlaying: true }),
   toggleYtPlaying: () => set((s) => ({ ytPlaying: !s.ytPlaying })),
   seekYt: (seconds) => set({ ytTime: Math.max(0, seconds) }),

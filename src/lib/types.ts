@@ -52,8 +52,12 @@ export interface Video {
   len: string
   /** two colours used for the placeholder thumbnail/player art */
   art: [string, string]
-  /** sample caption line shown when captions are on */
+  /** sample caption line shown when captions are on (simulated playback only) */
   caption: string
+  /** Real YouTube video id. When set, the player embeds the actual video;
+   * otherwise it falls back to the simulated timeline. Users can bind an id to
+   * any entry at runtime by pasting a link. */
+  ytId?: string
 }
 
 export interface Notification {

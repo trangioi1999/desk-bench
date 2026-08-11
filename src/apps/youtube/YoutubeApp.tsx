@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { useDesktopStore } from '../../store/useDesktopStore'
 import { VIDEOS, formatDuration, parseDuration } from '../../lib/data'
+import { extractVideoId, useYoutubePlayer } from './useYoutubePlayer'
 import {
   CaptionsIcon,
   FullscreenIcon,
@@ -24,18 +25,33 @@ function artBackground([a, b]: [string, string], stripe = 10) {
 export function YoutubeTitle() {
   const query = useDesktopStore((s) => s.ytQuery)
   const setQuery = useDesktopStore((s) => s.setYtQuery)
+  const index = useDesktopStore((s) => s.ytIndex)
+  const bindYtId = useDesktopStore((s) => s.bindYtId)
+
+  const pastedId = extractVideoId(query)
+
+  const submit = () => {
+    if (pastedId) bindYtId(index, pastedId)
+  }
+
   return (
     <>
       <div className={styles.searchChipWrap}>
-        <div className={styles.searchChip}>
-          <SearchIcon size={14} strokeWidth={1.5} color="#8b94a7" />
+        <div className={`${styles.searchChip} ${pastedId ? styles.searchChipReady : ''}`}>
+          <SearchIcon size={14} strokeWidth={1.5} color={pastedId ? 'var(--accent)' : '#8b94a7'} />
           <input
             className={styles.searchInput}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Tìm kiếm video"
-            aria-label="Tìm kiếm video"
+            onKeyDown={(e) => e.key === 'Enter' && submit()}
+            placeholder="Dán link YouTube, hoặc tìm trong danh sách"
+            aria-label="Dán link YouTube hoặc tìm kiếm video"
           />
+          {pastedId && (
+            <button type="button" className={styles.searchGo} onClick={submit}>
+              Phát
+            </button>
+          )}
         </div>
       </div>
       <div className={styles.titlebarSpacer} />
@@ -62,10 +78,44 @@ export function YoutubeApp() {
   const toggleSubscribed = useDesktopStore((s) => s.toggleYtSubscribed)
   const toggleLiked = useDesktopStore((s) => s.toggleYtLiked)
   const toggleMaximize = useDesktopStore((s) => s.toggleMaximize)
+  const boundIds = useDesktopStore((s) => s.ytBoundIds)
 
   const video = VIDEOS[index]
-  const duration = parseDuration(video.len)
-  const progress = duration > 0 ? Math.min(1, time / duration) : 0
+  const videoId = boundIds[index] ?? video.ytId
+  const embedRef = useRef<HTMLDivElement>(null)
+  const [player, playerControls] = useYoutubePlayer(embedRef, videoId)
+
+  // With a real video loaded the player owns playback state; otherwise the
+  // store's simulated timeline drives the same controls.
+  const live = Boolean(videoId) && player.ready && !player.failed
+  const duration = live && player.duration > 0 ? player.duration : parseDuration(video.len)
+  const currentTime = live ? player.currentTime : time
+  const isPlaying = live ? player.playing : playing
+  const progress = duration > 0 ? Math.min(1, currentTime / duration) : 0
+
+  const handleTogglePlay = () => {
+    if (live) playerControls.toggle()
+    else togglePlaying()
+  }
+  const handleSeek = (seconds: number) => {
+    if (live) playerControls.seek(seconds)
+    else seek(seconds)
+  }
+  const handleVolume = (v: number) => {
+    setVolume(v)
+    if (live) {
+      playerControls.setVolume(v)
+      playerControls.setMuted(v === 0)
+    }
+  }
+  const handleToggleMuted = () => {
+    toggleMuted()
+    if (live) playerControls.setMuted(!muted)
+  }
+  const handleToggleCaptions = () => {
+    toggleCaptions()
+    if (live) playerControls.setCaptions(!captions)
+  }
 
   const upNext = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -81,35 +131,44 @@ export function YoutubeApp() {
     <div className={styles.layout}>
       <div className={styles.playerCol}>
         <div className={styles.player} style={{ background: artBackground(video.art) }}>
-          <button
-            type="button"
-            className={styles.playOverlay}
-            onClick={togglePlaying}
-            aria-label={playing ? 'Tạm dừng video' : 'Phát video'}
-          >
-            <div className={styles.playGlass}>
-              {playing ? (
-                <PauseIcon size={26} strokeWidth={1.5} color="#f2f5fb" />
-              ) : (
-                <PlayIcon size={26} strokeWidth={1.5} color="#f2f5fb" />
-              )}
-            </div>
-          </button>
+          <div ref={embedRef} className={`${styles.embed} ${live ? styles.embedVisible : ''}`} />
 
-          {captions && <div className={styles.captionBar}>{video.caption}</div>}
+          {!live && (
+            <button
+              type="button"
+              className={styles.playOverlay}
+              onClick={handleTogglePlay}
+              aria-label={isPlaying ? 'Tạm dừng video' : 'Phát video'}
+            >
+              <div className={styles.playGlass}>
+                {isPlaying ? (
+                  <PauseIcon size={26} strokeWidth={1.5} color="#f2f5fb" />
+                ) : (
+                  <PlayIcon size={26} strokeWidth={1.5} color="#f2f5fb" />
+                )}
+              </div>
+            </button>
+          )}
+
+          {!videoId && <div className={styles.bindHint}>Dán link YouTube ở ô trên để phát video thật</div>}
+          {videoId && player.failed && (
+            <div className={styles.bindHint}>Không tải được video — kiểm tra mạng hoặc thử link khác</div>
+          )}
+
+          {captions && !live && <div className={styles.captionBar}>{video.caption}</div>}
 
           <div className={styles.controlBar}>
             <SeekTrack
               value={progress}
-              onChange={(ratio) => seek(ratio * duration)}
+              onChange={(ratio) => handleSeek(ratio * duration)}
               className={styles.scrubTrack}
               fillClassName={styles.scrubFill}
               knobClassName={styles.scrubKnob}
               label="Tua video"
             />
             <div className={styles.controlRow}>
-              <button type="button" onClick={togglePlaying} aria-label={playing ? 'Tạm dừng' : 'Phát'}>
-                {playing ? <PauseIcon size={18} /> : <PlayIcon size={18} />}
+              <button type="button" onClick={handleTogglePlay} aria-label={isPlaying ? 'Tạm dừng' : 'Phát'}>
+                {isPlaying ? <PauseIcon size={18} /> : <PlayIcon size={18} />}
               </button>
               <button
                 type="button"
@@ -119,24 +178,24 @@ export function YoutubeApp() {
                 <NextIcon size={18} />
               </button>
               <div className={styles.volumeGroup}>
-                <button type="button" onClick={toggleMuted} aria-label={muted ? 'Bật tiếng' : 'Tắt tiếng'}>
+                <button type="button" onClick={handleToggleMuted} aria-label={muted ? 'Bật tiếng' : 'Tắt tiếng'}>
                   <SpeakerIcon size={18} waves={speakerWaves} />
                 </button>
                 <SeekTrack
                   value={effectiveVolume / 100}
-                  onChange={(ratio) => setVolume(Math.round(ratio * 100))}
+                  onChange={(ratio) => handleVolume(Math.round(ratio * 100))}
                   className={styles.volumeTrack}
                   fillClassName={styles.volumeFill}
                   label="Âm lượng"
                 />
               </div>
               <div className={styles.controlTime}>
-                {formatDuration(time)} / {video.len}
+                {formatDuration(currentTime)} / {formatDuration(duration)}
               </div>
               <div className={styles.spacer} />
               <button
                 type="button"
-                onClick={toggleCaptions}
+                onClick={handleToggleCaptions}
                 aria-pressed={captions}
                 aria-label="Phụ đề"
                 className={captions ? styles.activeControl : undefined}

@@ -33,6 +33,16 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+        // The YouTube player API and its iframe must always hit the network —
+        // precaching or serving them from the SW breaks embedded playback.
+        navigateFallbackDenylist: [/^\/(embed|iframe_api)/],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }: { url: URL }) =>
+              url.hostname.endsWith('youtube.com') || url.hostname.endsWith('ytimg.com'),
+            handler: 'NetworkOnly',
+          },
+        ],
       },
     }),
   ],

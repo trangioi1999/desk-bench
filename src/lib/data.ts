@@ -69,6 +69,10 @@ export const VIDEOS: Video[] = [
     len: '2:04:37',
     art: ['rgba(143,182,255,.2)', 'rgba(185,168,255,.14)'],
     caption: '♪ nhạc lofi nhẹ nhàng ♪',
+    // Seeded with the long-running Lofi Girl stream. If it ever stops being
+    // embeddable, paste any other YouTube link into the app's search box —
+    // that binds a new id to whichever entry is selected.
+    ytId: 'jfKfPfyJRdk',
   },
   {
     title: 'Jazz cà phê buổi sáng — nhạc nền thư giãn 3 giờ',
