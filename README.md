@@ -49,6 +49,25 @@ npm run lint         # oxlint
 npm run generate:icons  # regenerate PWA icons from public/icon-source.svg
 ```
 
+## Embedding in another site
+
+`npm run build` also emits `dist/embed/mount.js`, an ES module that renders
+the desktop into an element of a host page (embed contract v1, used by
+[TG Labs](https://github.com/trangioi1999/tg-labs-mfe) at `/apps/deskbench`):
+
+```ts
+const { mount } = await import('https://<deployment>/embed/mount.js')
+const desktop = mount(element, { basePath: '/apps/deskbench', assetBase: '…', theme: { mode: 'dark', accent: '…' } })
+desktop.unmount()
+```
+
+The host loads the module from this deployment (TG Labs proxies it on its own
+domain), so a deploy here updates both places. Embedded, the styles are
+scoped to `.deskbench-root` (`src/embed/scope-css.ts`), the desktop sizes
+itself to the host element, and no service worker is registered.
+`npm run build:embed` builds only the module; `npx vite preview` serves it
+with CORS for local hosts.
+
 ## Deploy
 
 Pushing to `main` builds and deploys to GitHub Pages via
