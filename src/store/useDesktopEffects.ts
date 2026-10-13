@@ -1,15 +1,22 @@
 import { useEffect } from 'react'
 import { useDesktopStore } from './useDesktopStore'
+import { embedStage } from '../embed/runtime'
 
 /** Wires up the timers and global keyboard shortcuts the desktop depends on.
  * Mounted once at the app root. */
 export function useDesktopEffects() {
   useEffect(() => {
+    // Embedded in a host page, the desktop is as big as its element.
+    const stage = embedStage()
     const onResize = () => {
-      useDesktopStore.getState().setViewport(window.innerWidth, window.innerHeight)
+      const width = stage?.clientWidth ?? window.innerWidth
+      const height = stage?.clientHeight ?? window.innerHeight
+      useDesktopStore.getState().setViewport(width, height)
     }
     onResize()
     window.addEventListener('resize', onResize)
+    const observer = stage ? new ResizeObserver(onResize) : null
+    if (stage) observer?.observe(stage)
 
     const tick = window.setInterval(() => {
       useDesktopStore.getState().tickPomodoro()
@@ -61,6 +68,7 @@ export function useDesktopEffects() {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
       window.removeEventListener('resize', onResize)
+      observer?.disconnect()
     }
   }, [])
 }

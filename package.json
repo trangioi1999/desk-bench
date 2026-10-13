@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && vite build --config vite.embed.config.ts",
     "lint": "oxlint",
     "preview": "vite preview",
-    "generate:icons": "node scripts/generate-icons.mjs"
+    "generate:icons": "node scripts/generate-icons.mjs",
+    "build:embed": "vite build --config vite.embed.config.ts"
   },
   "dependencies": {
     "react": "^19.2.8",
@@ -21,6 +22,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
     "oxlint": "^1.75.0",
+    "postcss": "^8.5.30",
     "sharp": "^0.35.3",
     "typescript": "~6.0.2",
     "vite": "^8.2.0",
